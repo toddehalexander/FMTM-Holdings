@@ -1,0 +1,5 @@
+{
+  "name": "FMTM Momentum Tracker",
+  "description": "A zero-cost ETF tracker analyzing holdings, weighted performance, and attribution using free market data sources.",
+  "requestFramePermissions": []
+}
