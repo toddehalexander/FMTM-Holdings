@@ -108,8 +108,8 @@ const App: React.FC = () => {
         loadEtfData();
 
         try {
-            // Attempt to fetch holdings.csv from public folder (repo)
-            const response = await fetch('/holdings.csv');
+            // Use relative path for subpath compatibility
+            const response = await fetch('holdings.csv');
             if (response.ok) {
                 const csvText = await response.text();
                 const defaultHoldings = parseHoldingsCSV(csvText);
@@ -118,7 +118,7 @@ const App: React.FC = () => {
                     processHoldings(defaultHoldings);
                 }
             } else {
-                console.warn('Default holdings.csv not found in public folder.');
+                console.warn('Default holdings.csv not found.');
             }
         } catch (error) {
             console.error('Error loading default holdings:', error);
