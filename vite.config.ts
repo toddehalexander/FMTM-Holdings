@@ -6,5 +6,5 @@ export default defineConfig({
   plugins: [react()],
   // IMPORTANT: Replace 'YOUR_REPO_NAME' with your actual repository name
   // Example: If your repo is https://github.com/user/etf-tracker, use '/etf-tracker/'
-  base: '/YOUR_REPO_NAME/', 
+  base: '/FMTM-Holdings/', 
 });
