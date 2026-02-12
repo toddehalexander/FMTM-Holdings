@@ -2,7 +2,6 @@ import React from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell
 } from 'recharts';
-import { ExternalLink } from 'lucide-react';
 import { EnrichedHolding } from '../types';
 
 interface ChartsProps {
@@ -13,20 +12,11 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const displayValue = data.originalValue !== undefined ? data.originalValue : data.value;
-    const tickerUrl = `https://finance.yahoo.com/quote/${data.name.replace(/\./g, '-')}`;
 
     return (
       <div className="bg-white dark:bg-slate-850 p-4 border border-gray-200 dark:border-slate-700 rounded-lg shadow-xl min-w-[180px]">
         <div className="flex items-center justify-between mb-2 pb-1 border-b border-gray-100 dark:border-slate-700">
             <p className="font-bold text-gray-900 dark:text-white">{data.name}</p>
-            <a 
-              href={tickerUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded transition-colors text-blue-500"
-            >
-                <ExternalLink className="w-3 h-3" />
-            </a>
         </div>
         <div className="space-y-1.5 text-xs">
           <div className="flex justify-between">

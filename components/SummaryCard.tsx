@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUp, ArrowDown, RefreshCw, AlertTriangle } from 'lucide-react';
+import { ArrowUp, ArrowDown, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
 import { ETFSummary } from '../types';
 
 interface SummaryCardProps {
@@ -19,12 +19,25 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ summary, onRefresh, is
   const estimatedPerf = calculatedDailyPerformance ? calculatedDailyPerformance.toFixed(2) : '---';
   const gap = trackingGap ? trackingGap.toFixed(2) : '---';
 
+  const etfUrl = `https://finance.yahoo.com/quote/${summary.symbol}`;
+
   return (
     <div className="bg-white dark:bg-slate-850 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 mb-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
             <div className="flex items-center gap-2">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{summary.symbol}</h2>
+                <a 
+                  href={etfUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-2"
+                  title={`View ${summary.symbol} on Yahoo Finance`}
+                >
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {summary.symbol}
+                  </h2>
+                  <ExternalLink className="w-4 h-4 text-blue-500 transition-colors" />
+                </a>
                 <span className="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300">ETF</span>
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400">Target Momentum Strategy</p>

@@ -69,24 +69,29 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
     const isStable = h.isStable;
     const tickerUrl = `https://finance.yahoo.com/quote/${h.ticker.replace(/\./g, '-')}`;
     
+    // Handler for full row click
+    const handleRowClick = () => {
+        if (!h.ticker || h.ticker.includes('&')) return;
+        window.open(tickerUrl, '_blank', 'noopener,noreferrer');
+    };
+
     return (
-        <tr className="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors group/row">
+        <tr 
+            onClick={handleRowClick}
+            className={`transition-colors group/row ${!isStable ? 'cursor-pointer hover:bg-blue-50/50 dark:hover:bg-blue-900/10' : 'hover:bg-gray-50 dark:hover:bg-slate-800'}`}
+        >
             <td className="px-6 py-4 whitespace-nowrap">
             <div className="flex items-center">
                 <div>
                 <div className="flex items-center gap-2">
-                    <a 
-                      href={tickerUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="group flex items-center gap-1.5"
-                      title={`View ${h.ticker} on Yahoo Finance`}
-                    >
-                      <span className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`text-sm font-bold transition-colors ${!isStable ? 'text-gray-900 dark:text-white group-hover/row:text-blue-600 dark:group-hover/row:text-blue-400' : 'text-gray-900 dark:text-white'}`}>
                         {h.ticker}
                       </span>
-                      <ExternalLink className="w-3 h-3 text-blue-500 opacity-0 group-hover:opacity-100 transition-all transform translate-y-0.5 group-hover:translate-y-0" />
-                    </a>
+                      {!isStable && (
+                        <ExternalLink className="w-3 h-3 text-blue-500 opacity-0 group-hover/row:opacity-100 transition-all transform translate-y-0.5 group-hover/row:translate-y-0" />
+                      )}
+                    </div>
                     {isStable && (
                         <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-gray-300">
                             {h.ticker === 'FGXXX' ? 'Fund' : 'Cash'}
@@ -147,7 +152,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
       <div className="bg-white dark:bg-slate-850 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
         <div className="p-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Equity Holdings</h3>
-            <span className="text-xs text-gray-500 dark:text-gray-400 italic">Click tickers to research</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400 italic font-medium">Click row to research</span>
         </div>
         <div className="overflow-x-auto custom-scrollbar">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
@@ -155,36 +160,36 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
                 <tr>
                 <th 
                     scope="col" 
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700"
-                    onClick={() => handleSort(SortField.Ticker)}
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handleSort(SortField.Ticker); }}
                 >
                     <div className="flex items-center gap-1">Ticker <SortIcon field={SortField.Ticker} /></div>
                 </th>
                 <th 
                     scope="col" 
-                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700"
-                    onClick={() => handleSort(SortField.Weight)}
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handleSort(SortField.Weight); }}
                 >
                     <div className="flex items-center justify-end gap-1">Weight <SortIcon field={SortField.Weight} /></div>
                 </th>
                 <th 
                     scope="col" 
-                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700"
-                    onClick={() => handleSort(SortField.Price)}
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handleSort(SortField.Price); }}
                 >
                     <div className="flex items-center justify-end gap-1">Price <SortIcon field={SortField.Price} /></div>
                 </th>
                 <th 
                     scope="col" 
-                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700"
-                    onClick={() => handleSort(SortField.Change)}
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handleSort(SortField.Change); }}
                 >
                     <div className="flex items-center justify-end gap-1">% Change <SortIcon field={SortField.Change} /></div>
                 </th>
                 <th 
                     scope="col" 
-                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700"
-                    onClick={() => handleSort(SortField.Contribution)}
+                    className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                    onClick={(e) => { e.stopPropagation(); handleSort(SortField.Contribution); }}
                 >
                     <div className="flex items-center justify-end gap-1">Attrib. Impact <SortIcon field={SortField.Contribution} /></div>
                 </th>
