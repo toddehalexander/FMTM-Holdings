@@ -2,6 +2,7 @@ import React from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell
 } from 'recharts';
+import { ExternalLink } from 'lucide-react';
 import { EnrichedHolding } from '../types';
 
 interface ChartsProps {
@@ -11,28 +12,39 @@ interface ChartsProps {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    // Use originalValue if available (for negative bars shown as positive magnitude), else value
     const displayValue = data.originalValue !== undefined ? data.originalValue : data.value;
+    const tickerUrl = `https://finance.yahoo.com/quote/${data.name.replace(/\./g, '-')}`;
 
     return (
-      <div className="bg-white dark:bg-slate-850 p-3 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg">
-        <p className="font-bold text-gray-900 dark:text-white mb-1">{data.name}</p>
-        <div className="space-y-1 text-xs">
-          <p className="text-gray-600 dark:text-gray-300">
-            <span className="font-semibold">Impact:</span> 
-            <span className={displayValue >= 0 ? 'text-green-600 dark:text-green-400 ml-1' : 'text-red-600 dark:text-red-400 ml-1'}>
+      <div className="bg-white dark:bg-slate-850 p-4 border border-gray-200 dark:border-slate-700 rounded-lg shadow-xl min-w-[180px]">
+        <div className="flex items-center justify-between mb-2 pb-1 border-b border-gray-100 dark:border-slate-700">
+            <p className="font-bold text-gray-900 dark:text-white">{data.name}</p>
+            <a 
+              href={tickerUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded transition-colors text-blue-500"
+            >
+                <ExternalLink className="w-3 h-3" />
+            </a>
+        </div>
+        <div className="space-y-1.5 text-xs">
+          <div className="flex justify-between">
+            <span className="text-gray-500 dark:text-gray-400">Impact:</span> 
+            <span className={displayValue >= 0 ? 'text-green-600 dark:text-green-400 font-bold' : 'text-red-600 dark:text-red-400 font-bold'}>
               {displayValue > 0 ? '+' : ''}{displayValue.toFixed(3)}%
             </span>
-          </p>
-          <p className="text-gray-600 dark:text-gray-300">
-            <span className="font-semibold">Weight:</span> {data.weight.toFixed(2)}%
-          </p>
-          <p className="text-gray-600 dark:text-gray-300">
-            <span className="font-semibold">Day Change:</span> 
-            <span className={data.change >= 0 ? 'text-green-600 dark:text-green-400 ml-1' : 'text-red-600 dark:text-red-400 ml-1'}>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-500 dark:text-gray-400">Weight:</span> 
+            <span className="text-gray-700 dark:text-gray-200">{data.weight.toFixed(2)}%</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-500 dark:text-gray-400">Day Change:</span> 
+            <span className={data.change >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
                {data.change > 0 ? '+' : ''}{data.change.toFixed(2)}%
             </span>
-          </p>
+          </div>
         </div>
       </div>
     );
@@ -56,10 +68,9 @@ export const Charts: React.FC<ChartsProps> = ({ holdings }) => {
     }));
 
   // Prep data for Top Losers (Top 5 Negative)
-  // We use Math.abs for the value so the bars grow left-to-right for better visual comparison
   const losers = [...holdings]
     .filter(h => (h.contribution || 0) < 0)
-    .sort((a, b) => (a.contribution || 0) - (b.contribution || 0)) // Most negative first
+    .sort((a, b) => (a.contribution || 0) - (b.contribution || 0))
     .slice(0, 5)
     .map(h => ({
       name: h.ticker,
@@ -88,14 +99,14 @@ export const Charts: React.FC<ChartsProps> = ({ holdings }) => {
                 type="category" 
                 dataKey="name" 
                 width={50} 
-                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }} 
+                tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }} 
                 axisLine={false}
                 tickLine={false}
               />
               <RechartsTooltip content={<CustomTooltip />} cursor={{fill: 'rgba(255,255,255,0.05)'}} />
               <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={24}>
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.fill} />
+                  <Cell key={`cell-${index}`} fill={entry.fill} className="hover:opacity-80 transition-opacity" />
                 ))}
               </Bar>
             </BarChart>

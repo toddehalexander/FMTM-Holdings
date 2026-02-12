@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ArrowUpDown, ArrowUp, ArrowDown, AlertCircle } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, AlertCircle, ExternalLink } from 'lucide-react';
 import { EnrichedHolding, SortField, SortDirection } from '../types';
 
 interface HoldingsTableProps {
@@ -67,20 +67,33 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
   // Reusable Row Component
   const HoldingRow = ({ h }: { h: EnrichedHolding }) => {
     const isStable = h.isStable;
+    const tickerUrl = `https://finance.yahoo.com/quote/${h.ticker.replace(/\./g, '-')}`;
+    
     return (
-        <tr className="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
+        <tr className="hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors group/row">
             <td className="px-6 py-4 whitespace-nowrap">
             <div className="flex items-center">
                 <div>
                 <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{h.ticker}</span>
+                    <a 
+                      href={tickerUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-1.5"
+                      title={`View ${h.ticker} on Yahoo Finance`}
+                    >
+                      <span className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {h.ticker}
+                      </span>
+                      <ExternalLink className="w-3 h-3 text-blue-500 opacity-0 group-hover:opacity-100 transition-all transform translate-y-0.5 group-hover:translate-y-0" />
+                    </a>
                     {isStable && (
                         <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-800 dark:bg-slate-700 dark:text-gray-300">
                             {h.ticker === 'FGXXX' ? 'Fund' : 'Cash'}
                         </span>
                     )}
                 </div>
-                <div className="text-xs text-gray-500 truncate max-w-[150px]">{h.name}</div>
+                <div className="text-xs text-gray-500 truncate max-w-[180px]">{h.name}</div>
                 </div>
             </div>
             </td>
@@ -132,8 +145,9 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings }) => {
     <div className="space-y-8">
       {/* Equity Holdings Section */}
       <div className="bg-white dark:bg-slate-850 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800">
+        <div className="p-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Equity Holdings</h3>
+            <span className="text-xs text-gray-500 dark:text-gray-400 italic">Click tickers to research</span>
         </div>
         <div className="overflow-x-auto custom-scrollbar">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
